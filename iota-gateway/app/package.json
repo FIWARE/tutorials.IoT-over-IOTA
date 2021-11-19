@@ -1,0 +1,34 @@
+{
+  "name": "tutorials.step-by-step",
+  "description": "Gateway between MQTT messages and the IOTA Tangle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FIWARE/tutorials.step-by-step.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FIWARE/tutorials.step-by-step/issues"
+  },
+  "homepage": "https://fiware-tutorials.rtfd.io/",
+  "author": "FIWARE Foundation e.V.",
+  "keywords": [
+    "node",
+    "fiware",
+    "tutorial",
+    "ngsi"
+  ],
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  },
+  "dependencies": {
+    "async": "^3.2.2",
+    "@iota/client": "^2.2.1",
+    "debug": "~4.3.2",
+    "mqtt": "^4.2.8"
+  },
+  "scripts": {
+    "start": "node ./bin/www"
+  }
+}
