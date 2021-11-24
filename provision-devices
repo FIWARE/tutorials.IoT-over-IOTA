@@ -33,7 +33,8 @@ curl -s -o /dev/null -X POST  \
      "transport":   "MQTT",
      "timezone":    "Europe/Berlin",
      "attributes": [
-       { "object_id": "c", "name":"count", "type":"Integer"}
+        {"object_id": "c", "name":"count", "type":"Integer"},
+        {"object_id": "t", "name": "TimeInstant", "type":"DateTime"}
       ],
       "static_attributes": [
           {"name": "category", "type":"Text", "value": ["sensor"]},
@@ -78,7 +79,8 @@ curl -s -o /dev/null -X POST  \
      ],
      "attributes": [
         {"object_id": "s", "name": "state", "type":"Text"},
-        {"object_id": "l", "name": "luminosity", "type":"Integer"}
+        {"object_id": "l", "name": "luminosity", "type":"Integer"},
+        {"object_id": "t", "name": "TimeInstant", "type":"DateTime"}
      ],
      "static_attributes": [
           {"name": "category", "type":"Text", "value": ["actuator","sensor"]},
@@ -103,7 +105,8 @@ curl -s -o /dev/null -X POST  \
         {"name": "lock","type": "command"}
       ],
      "attributes": [
-        {"object_id": "s", "name": "state", "type":"Text"}
+        {"object_id": "s", "name": "state", "type":"Text"},
+        {"object_id": "t", "name": "TimeInstant", "type":"DateTime"}
       ],
      "static_attributes": [
           {"name": "category", "type":"Text", "value": ["actuator", "sensor"]},

@@ -1,130 +1,162 @@
 #!/usr/bin/env node
 
-const debug = require('debug')('gateway:iota');
-const iotaClient = require('@iota/client');
-const mqtt = require('mqtt');
-const async = require('async');
+const debug = require("debug")("gateway:iota");
+const iotaClient = require("@iota/client");
+const mqtt = require("mqtt");
 
-
-const IOTA_NODE_URL = process.env.IOTA_NODE || 'https://api.thin-hornet-1.h.chrysalis-devnet.iota.cafe';
-const IOTA_MESSAGE_INDEX = 'messages/indexation/' + (process.env.IOTA_MESSAGE_INDEX || 'fiware')
-const IOTA_TOPIC = (process.env.IOTA_MESSAGE_INDEX || 'fiware');
+const IOTA_NODE_URL =
+  process.env.IOTA_NODE ||
+  "https://api.thin-hornet-1.h.chrysalis-devnet.iota.cafe";
+const IOTA_MESSAGE_INDEX =
+  "messages/indexation/" + (process.env.IOTA_MESSAGE_INDEX || "fiware");
+const IOTA_TOPIC = process.env.IOTA_MESSAGE_INDEX || "fiware";
 const IOTA_CLIENT = new iotaClient.ClientBuilder().node(IOTA_NODE_URL).build();
-const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || 'mqtt://mosquitto';
+const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || "mqtt://mosquitto";
 const MQTT_CLIENT = mqtt.connect(MQTT_BROKER_URL);
+const DEVICE_PAYLOAD = process.env.DUMMY_DEVICES_PAYLOAD || "ultralight";
 
-
-MQTT_CLIENT.on('connect', () => {
-    MQTT_CLIENT.subscribe('/+/+/cmd');
-});
-MQTT_CLIENT.on('message', function (topic, message) {
-    const parts = topic.toString().split('/');;
-    const apiKey = parts[1];
-    const deviceId = parts[2];
-    const action = parts[3];
-    debug('command received from MQTT', message.toString());
-    forwardAsIOTATangle(apiKey, deviceId, message.toString(), action)
-});
-
-   
-IOTA_CLIENT.getInfo()
-    .then(() => {
-        debug('connected to IOTA Tangle: ' + IOTA_NODE_URL );
-        debug("Subscribing to '" + IOTA_MESSAGE_INDEX + "/attrs'");
-        IOTA_CLIENT.subscriber().topic(IOTA_MESSAGE_INDEX + '/attrs').subscribe((err, data) => {
-            if(err){
-                debug(err);
-            } else if(data){
-                const messageId = getMessageId(data.payload);
-                IOTA_CLIENT.getMessage()
-                    .data(messageId)
-                    // eslint-disable-next-line camelcase
-                    .then((message_data) => {
-                        // eslint-disable-next-line camelcase
-                        const payload = Buffer.from(message_data.message.payload.data, 'hex').toString('utf8');
-                        debug('measure received from Tangle:', payload);
-                        const data = unmarshall(payload);
-                        forwardAsMQTT(data.k, data.i, data.d, 'attrs') 
-
-                    })
-                    .catch((err) => {
-                        debug(err);
-                    });
-            }
-        });
-        debug("Subscribing to '" + IOTA_MESSAGE_INDEX + "/cmdexe'");
-        IOTA_CLIENT.subscriber().topic(IOTA_MESSAGE_INDEX + '/cmdexe').subscribe((err, data) => {
-            if(err){
-                debug(err);
-            } else if(data){
-                const messageId = getMessageId(data.payload);
-                IOTA_CLIENT.getMessage()
-                    .data(messageId)
-                    // eslint-disable-next-line camelcase
-                    .then((message_data) => {
-                        // eslint-disable-next-line camelcase
-                        const payload = Buffer.from(message_data.message.payload.data, 'hex').toString('utf8');
-                        debug('command response received from Tangle:', payload);
-                        const data = unmarshall(payload);
-                        forwardAsMQTT(data.k, data.i, data.d, 'cmdexe') 
-
-                    })
-                    .catch((err) => {
-                        debug(err);
-                    });
-            }
-        });
-    })
-    .catch((err) => {
-        debug(err);
-    });
-
-
-function getMessageId(payload) {
-    let messageId = null;
-    try {
-        messageId = IOTA_CLIENT.getMessageId(payload);
-    } catch (e) {
-        messageId = getMessageId(payload);
-    }
-    return messageId;
+function getJSONCommand(string) {
+  const obj = JSON.parse(string);
+  return Object.keys(obj)[0];
 }
 
-function unmarshall(payload){
-    const parts = payload.split('&');
-    const obj = {};
-    parts.forEach ((elem) => {
-        keyValues = elem.split('=');
-        obj[keyValues[0]] = keyValues[1];
-    });
-    return obj;
+function getResult(cmd, status) {
+  const result = {};
+  result[cmd] = status;
+  return JSON.stringify(result);
+}
+
+MQTT_CLIENT.on("connect", () => {
+  MQTT_CLIENT.subscribe("/+/+/cmd");
+});
+MQTT_CLIENT.on("message", function (topic, message) {
+  const parts = topic.toString().split("/");
+  const apiKey = parts[1];
+  const deviceId = parts[2];
+  const action = parts[3];
+  debug("Southbound command received from MQTT", message.toString());
+  forwardAsIOTATangle(apiKey, deviceId, message.toString(), action);
+});
+
+IOTA_CLIENT.getInfo()
+  .then(() => {
+    debug("connected to IOTA Tangle: " + IOTA_NODE_URL);
+    debug("Subscribing to '" + IOTA_MESSAGE_INDEX + "/attrs'");
+    IOTA_CLIENT.subscriber()
+      .topic(IOTA_MESSAGE_INDEX + "/attrs")
+      .subscribe((err, data) => {
+        if (err) {
+          debug(err);
+        } else if (data) {
+          const messageId = getMessageId(data.payload);
+          IOTA_CLIENT.getMessage()
+            .data(messageId)
+            // eslint-disable-next-line camelcase
+            .then((message_data) => {
+              // eslint-disable-next-line camelcase
+              const payload = Buffer.from(
+                message_data.message.payload.data,
+                "hex"
+              ).toString("utf8");
+              debug("Northbound measure received from Tangle:", payload);
+              const data = unmarshall(payload);
+              forwardAsMQTT(data.k, data.i, data.d, "attrs");
+            })
+            .catch((err) => {
+              debug(err);
+            });
+        }
+      });
+    debug("Subscribing to '" + IOTA_MESSAGE_INDEX + "/cmdexe'");
+    IOTA_CLIENT.subscriber()
+      .topic(IOTA_MESSAGE_INDEX + "/cmdexe")
+      .subscribe((err, data) => {
+        if (err) {
+          debug(err);
+        } else if (data) {
+          const messageId = getMessageId(data.payload);
+          IOTA_CLIENT.getMessage()
+            .data(messageId)
+            // eslint-disable-next-line camelcase
+            .then((message_data) => {
+              // eslint-disable-next-line camelcase
+              const payload = Buffer.from(
+                message_data.message.payload.data,
+                "hex"
+              ).toString("utf8");
+              debug(
+                "Northbound command response received from Tangle:",
+                payload
+              );
+              const data = unmarshall(payload);
+              forwardAsMQTT(data.k, data.i, data.d, "cmdexe");
+            })
+            .catch((err) => {
+              debug(err);
+            });
+        }
+      });
+  })
+  .catch((err) => {
+    debug(err);
+  });
+
+function getMessageId(payload) {
+  let messageId = null;
+  try {
+    messageId = IOTA_CLIENT.getMessageId(payload);
+  } catch (e) {
+    messageId = getMessageId(payload);
+  }
+  return messageId;
+}
+
+function unmarshall(payload) {
+  const parts = payload.split("&");
+  const obj = {};
+  parts.forEach((elem) => {
+    keyValues = elem.split("=");
+    obj[keyValues[0]] = keyValues[1];
+  });
+  return obj;
 }
 
 // measures sent over MQTT are posted as topics
-function   forwardAsMQTT(apiKey, deviceId, state, topic) {
-    const mqttTopic = '/' + apiKey + '/' + deviceId + '/' + topic;
-    MQTT_CLIENT.publish(mqttTopic, state);
+function forwardAsMQTT(apiKey, deviceId, state, topic) {
+  const mqttTopic = "/" + apiKey + "/" + deviceId + "/" + topic;
+  debug("Northbound: Sent to MQTT topic " + mqttTopic);
+  MQTT_CLIENT.publish(mqttTopic, state);
 }
 
-const queue = async.queue((data, callback) => {
-    IOTA_CLIENT.message()
-        .index(IOTA_TOPIC + '/' + data.topic)
-        .data(data.payload)
-        .submit()
-        .then((message) => {
-            debug('sent: ' + data.payload + '  to ' +  IOTA_TOPIC + '/' + data.topic);
-            debug('messageId: '  + message.messageId);
-            callback();
-        })
-        .catch((err) => {
-            debug(err);
-            callback(err);
-        });
-});
-
-
 function forwardAsIOTATangle(apiKey, deviceId, state, topic) {
-     const payload =
-            'i=' + deviceId + '&k=' + apiKey+ '&d=' + state;
-    queue.push({payload, topic});
+  const payload = "i=" + deviceId + "&k=" + apiKey + "&d=" + state;
+  IOTA_CLIENT.message()
+    .index(IOTA_TOPIC + "/" + topic)
+    .data(payload)
+    .submit()
+    .then((message) => {
+      debug(
+        "Southbound command pushed to Tangle: " +
+          payload +
+          "  to " +
+          IOTA_TOPIC +
+          "/" +
+          topic
+      );
+      debug("messageId: " + message.messageId);
+    })
+    .catch((err) => {
+      debug(err);
+      if (topic === "cmd") {
+        if (DEVICE_PAYLOAD === "ultralight") {
+          const keyValuePairs = state.split("|") || [""];
+          const errorState = keyValuePairs[0] + "| ERROR";
+          forwardAsMQTT(apiKey, deviceId, errorState, "cmdexe");
+        } else {
+          const command = getJSONCommand(state);
+          const errorState = getResult(command, "ERROR");
+          forwardAsMQTT(apiKey, deviceId, errorState, "cmdexe");
+        }
+      }
+    });
 }
