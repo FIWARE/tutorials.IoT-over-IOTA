@@ -32,7 +32,6 @@ IOTA_CLIENT.getInfo()
                     IOTA_CLIENT.getMessage()
                         .data(messageId)
                         .then((messageData) => {
-                            debug('X' + messageData)
                             Northbound.measure(messageData)
                         })
                         .catch((err) => {
@@ -51,7 +50,6 @@ IOTA_CLIENT.getInfo()
                     IOTA_CLIENT.getMessage()
                         .data(messageId)
                         .then((messageData) => {
-                            debug('Y' + messageData)
                             Northbound.commandResponse(messageData)
                         })
                         .catch((err) => {
