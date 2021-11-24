@@ -80,7 +80,7 @@ services:
 
   # Tutorial acts as a series of dummy IoT Sensors over IOTA Tangle
   tutorial:
-    image: tutorial #fiware/tutorials.context-provider
+    image: fiware/tutorials.context-provider
     hostname: iot-sensors
     container_name: fiware-tutorial
     depends_on:
