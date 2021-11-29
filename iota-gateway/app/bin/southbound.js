@@ -12,7 +12,7 @@ function commandReceived(topic, message) {
     const deviceId = parts[2];
     const action = parts[3];
     debug('Command received from MQTT', message.toString());
-    forwardAsIOTATangle(apiKey, deviceId, message.toString(), action);
+    process.nextTick(() => {forwardAsIOTATangle(apiKey, deviceId, message.toString(), action)});
 }
 
 function forwardAsIOTATangle(apiKey, deviceId, state, topic) {

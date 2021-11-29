@@ -32,7 +32,7 @@ function commandResponseReceived(messageData) {
     const payload = Buffer.from(messageData.message.payload.data, 'hex').toString('utf8');
     debug('Command response received from Tangle:', payload);
     const data = unmarshall(payload);
-    forwardAsMQTT(data.k, data.i, data.d, 'cmdexe');
+    process.nextTick(() => {forwardAsMQTT(data.k, data.i, data.d, 'cmdexe')});
 }
 
 function unmarshall(payload) {
@@ -49,7 +49,7 @@ function measureReceived(messageData) {
     const payload = Buffer.from(messageData.message.payload.data, 'hex').toString('utf8');
     debug('Measure received from Tangle:', payload);
     const data = unmarshall(payload);
-    forwardAsMQTT(data.k, data.i, data.d, 'attrs');
+    process.nextTick(() => {forwardAsMQTT(data.k, data.i, data.d, 'attrs')});
 }
 
 // measures sent over MQTT are posted as topics
