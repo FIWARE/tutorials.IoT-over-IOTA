@@ -1,0 +1,36 @@
+@startuml
+
+skinparam object {
+  BackgroundColor #f5f5f5
+  ArrowColor #4c4c4c
+  BorderColor #5dc0cf
+}
+
+object Bell
+
+Bell : id 
+Bell : state 
+
+object Door
+
+Door : id 
+Door : state
+
+object MotionSensor
+
+MotionSensor : id 
+MotionSensor : count 
+
+object Lamp
+
+Lamp : id 
+Lamp : state 
+Lamp : luminocity
+
+object Thing
+
+Thing -up-> Bell
+Thing -up-> Door
+Thing -up-> MotionSensor
+Thing -up-> Lamp
+@enduml
