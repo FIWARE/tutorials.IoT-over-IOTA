@@ -658,9 +658,68 @@ Which indicates a request was sent to ring the bell.
 ### Sending Device Measures
 
 
-A measure from a device can be sim
+A measure from a device can be simulated by selecting **Detect Motion** from the dropdown and clicking on send.
 
 ![](https://fiware.github.io//tutorials.IoT-over-IOTA/img/device-tangle.png)
+
+The device persists the measure to the `fiware/attrs` topic on the IOTA Tangle Mainnet.
+
+
+#### :two:nd terminal - Device Result:
+
+```text
+2021-12-07T16:34:25.767Z tutorial:devices fireMotionSensor
+2021-12-07T16:34:26.185Z tutorial:northbound sendIOTAMeasure: motion001
+2021-12-07T16:34:26.479Z tutorial:ultralight measure sent to fiware/attrs
+2021-12-07T16:34:26.479Z tutorial:ultralight da4df31054df529a3ade74befb84edabf7697ae8a3a9ee3481be08ee0aabb3e7
+```
+
+Once the transactions is settled, it is passed onto the subscribing Gateway component
+
+
+#### :one:st terminal - Gateway Result:
+
+```text
+2021-12-07T16:35:25.679Z gateway:northbound Measure received from Tangle: i=motion001&k=1068318794&d=c|0|t|2021-12-07T16:34:44.891Z
+2021-12-07T16:35:25.680Z gateway:northbound Sent to MQTT topic /1068318794/motion001/attrs
+```
+
+There may be a noticable lag between reading the measure and it being received at the context broker. The payload of the measure therefore contains a timestamp  `t|2021-12-07T16:34:44.891Z` which is mapped to `TimeInstant` in the IoT Agent to ensure that the correct metadata is associated with the measure in the context broker.
+
+
+The state of the sensor can be read by querying the entity within the Orion Context Broker.
+
+#### :three: Request:
+
+```console
+curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Motion:001?options=keyValues' \
+-H 'fiware-service: openiot' \
+-H 'fiware-servicepath: /'
+```
+
+
+#### Response:
+
+```json
+{
+    "id": "urn:ngsi-ld:Motion:001",
+    "type": "Motion",
+    "TimeInstant": "2021-12-07T16:34:44.891Z",
+    "category": [
+        "sensor"
+    ],
+    "controlledProperty": "motion",
+    "count": "0",
+    "function": [
+        "sensing"
+    ],
+    "refStore": "urn:ngsi-ld:Store:001",
+    "supportedProtocol": [
+        "ul20"
+    ],
+    "supportedUnits": "C62"
+}
+```
 
 
 # Next Steps
