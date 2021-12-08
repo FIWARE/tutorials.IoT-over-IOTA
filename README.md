@@ -93,16 +93,17 @@ communication should be considered as asynchronous.
 The IOT Agent for Ultralight currently offers three standard transport mechanisms - HTTP, MQTT and AMPQ. Whereas it
 would be possible to create a new binding directly for IOTA, in this case, it makes more sense to re-use the existing
 asynchronous MQTT binding and extend using a gateway solution where a separate microservice deals with the IOTA
-messages. IoT Agents based on gateway solutions already exist for OPC-UA and LoRaWAN. In the case of the IoT Agent for
-OPC-UA for example, device readings are passed to an OPC-UA server and the IoT Agent in turn subscribes to the OPC-UA
-server and transforms messages into NGSI format.
-
-Effectively MQTT is now just being used as a message bus, so we can provision our IoT devices as MQTT and intercept the
-relevant MQTT topics to transform the data into IOTA Tangle transactions. The payload of each message continues to use
-the existing
+messages. IoT Agents based on gateway solutions already exist for [OPC-UA](https://iotagent-opcua.readthedocs.io/) and
+[LoRaWAN](https://fiware-lorawan.readthedocs.io/). In the case of the IoT Agent for OPC-UA for example, in its
+[own Tutorial](https://iotagent-opcua.readthedocs.io/en/latest/opc_ua_agent_tutorial/index.html#step-by-step-tutorial),
+device readings are passed to an OPC-UA server and the IoT Agent in turn subscribes to the OPC-UA server and transforms
+messages into NGSI format. With the Gateway solution described in this tutorial effectively MQTT is now just being used
+as a message bus, so we can provision our IoT devices as MQTT devices and intercept the relevant MQTT topics to
+transform the data into IOTA Tangle transactions to talk to IOTA Tangle enabled devices. The payload of each message
+continues to use the existing
 [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
 syntax and therefore we can continue to used thesame FIWARE generic enabler to connect the devices. It is merely the
-**transport** which has been customized in this scenario.
+underlying **transport** which has been customized in this scenario.
 
 #### Mosquitto MQTT Broker
 
@@ -761,8 +762,9 @@ IOTA_CLIENT.getInfo()
 ### MQTT-IOTA Gateway Southbound - Sample Code
 
 For the southbound traffic, the API Key and device id are extracted from the MQTT topic and moved into the IOTA payload.
-The syntax of the IOTA payload (with `i`, `k` and `d` attributes) is based on the Ultralight HTTP syntax. The `message`
-is then persisted to the Tangle using an appropriate index:
+The syntax of the IOTA payload (with `i`, `k` and `d` attributes) is based on the
+[Ultralight HTTP syntax](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#http-binding). The
+`message` is then persisted to the Tangle using an appropriate index:
 
 ```javascript
 function command(topic = "cmd", message) {
@@ -813,8 +815,9 @@ function forwardAsMQTT(apiKey, deviceId, state, topic) {
 }
 ```
 
-The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/master/iota-gateway/app) of the MQTT-IOTA Gateway includes additional
-error handling and asynchronous data handling to defer the execution of a function until the next Event Loop iteration.
+The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/master/iota-gateway/app) of the MQTT-IOTA Gateway
+includes additional error handling and asynchronous data handling to defer the execution of a function until the next
+Event Loop iteration.
 
 ## IOTA Tangle Device - Sample Code
 
