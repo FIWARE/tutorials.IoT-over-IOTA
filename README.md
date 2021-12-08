@@ -69,7 +69,7 @@ client, anywhere around the world can send valid transactions to a Node.
 
 IOTA positions itself as being an ideal distributed ledger for IoT due to its feeless nature and scalable distributed
 structure. Obviously when architecting any smart system, the developer needs to compromise between various factors such
-as price, speed, reliablity, security and so on. The previous MQTT tutorial was fast, but contained no security elements
+as price, speed, reliability, security and so on. The previous MQTT tutorial was fast, but contained no security elements
 and was vunerable to malicious attack. An IOTA-based IoT system will automatically include secure logging of all events
 and therefore could be used to for charging customers on an event-by-event basis.
 
@@ -90,7 +90,7 @@ reading will be placed in a transaction object and attached to the IOTA Tangle, 
 is immutable. It obviously takes time for all nodes to agree that a transaction hs occurred, and therefore all
 communication should be considered as asynchronous.
 
-The IOT Agent for Ultralight currently offers three standard transport mechanisms - HTTP, MQTT and AMPQ. Whereas it
+The IoT Agent for Ultralight currently offers three standard transport mechanisms - HTTP, MQTT and AMPQ. Whereas it
 would be possible to create a new binding directly for IOTA, in this case, it makes more sense to re-use the existing
 asynchronous MQTT binding and extend using a gateway solution where a separate microservice deals with the IOTA
 messages. IoT Agents based on gateway solutions already exist for [OPC-UA](https://iotagent-opcua.readthedocs.io/) and
@@ -481,7 +481,7 @@ curl -X POST \
 
 #### Device Monitor
 
-The device monitor can be found at: `http://localhost:3000/device/monitor` - open the webpage to view the state of the
+The device monitor can be found at: `http://localhost:3000/device/monitor` - open the web page to view the state of the
 devices and view the persisted IOTA Tangle traffic.
 
 ### Display the IOTA-Gateway logs (:one:st Terminal)
@@ -677,7 +677,7 @@ Once the transactions is settled, it is passed onto the subscribing Gateway comp
 2021-12-07T16:35:25.680Z gateway:northbound Sent to MQTT topic /1068318794/motion001/attrs
 ```
 
-There may be a noticable lag between reading the measure and it being received at the context broker. The payload of the
+There may be a noticeable lag between reading the measure and it being received at the context broker. The payload of the
 measure therefore contains a timestamp `t|2021-12-07T16:34:44.891Z` which is mapped to `TimeInstant` in the IoT Agent to
 ensure that the correct metadata is associated with the measure in the context broker.
 
@@ -761,7 +761,7 @@ IOTA_CLIENT.getInfo()
 
 ### MQTT-IOTA Gateway Southbound - Sample Code
 
-For the southbound traffic, the API Key and device id are extracted from the MQTT topic and moved into the IOTA payload.
+For the southbound traffic, the API Key and device ID are extracted from the MQTT topic and moved into the IOTA payload.
 The syntax of the IOTA payload (with `i`, `k` and `d` attributes) is based on the
 [Ultralight HTTP syntax](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#http-binding). The
 `message` is then persisted to the Tangle using an appropriate index:
