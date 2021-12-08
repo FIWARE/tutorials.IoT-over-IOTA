@@ -13,11 +13,21 @@ global.IOTA_CLIENT = new iotaClient.ClientBuilder().node(IOTA_NODE_URL).build();
 const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || 'mqtt://mosquitto';
 global.MQTT_CLIENT = mqtt.connect(MQTT_BROKER_URL);
 
+
+// The Connected IoT Agent is generating MQTT traffic, the Gateway listens to commands and forwards
+// them as necessary. The MQTT broker is effectively just a message bus between the IoT Agent and
+// the Gateway Microservice.
 MQTT_CLIENT.on('connect', () => {
     MQTT_CLIENT.subscribe('/+/+/cmd');
 });
 MQTT_CLIENT.on('message', Southbound.command);
 
+
+// IOTA node(s) also provide a Message Queuing Telemetry Transport (MQTT) layer, which
+// provides information about events that is being triggered by the IOTA network.
+// The gateway is listening to Northbound Measures and Command Acknowledgements
+//
+// see https://wiki.iota.org/iota.rs/libraries/nodejs/examples#listening-to-mqtt
 IOTA_CLIENT.getInfo()
     .then(() => {
         debug('connected to IOTA Tangle: ' + IOTA_NODE_URL);
@@ -28,6 +38,10 @@ IOTA_CLIENT.getInfo()
                 if (err) {
                     debug(err);
                 } else if (data) {
+                    // An IOTA message is the encapsulating data structure that is being actually broadcasted
+                    // across the network. It is an atomic unit that is accepted/rejected as a whole.
+                    //
+                    // see https://wiki.iota.org/iota.rs/libraries/nodejs/examples#messages
                     const messageId = getMessageId(data.payload);
                     IOTA_CLIENT.getMessage()
                         .data(messageId)
@@ -62,6 +76,8 @@ IOTA_CLIENT.getInfo()
         debug(err);
     });
 
+// Recursive function to ensure that a IOTA Tangle messageId is received.
+// It will repeat on failure.
 function getMessageId(payload) {
     let messageId = null;
     try {

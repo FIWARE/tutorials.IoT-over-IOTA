@@ -813,7 +813,7 @@ function forwardAsMQTT(apiKey, deviceId, state, topic) {
 }
 ```
 
-The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/master/iota-gateway/app) includes additional
+The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/master/iota-gateway/app) of the MQTT-IOTA Gateway includes additional
 error handling and asynchronous data handling to defer the execution of a function until the next Event Loop iteration.
 
 ## IOTA Tangle Device - Sample Code
