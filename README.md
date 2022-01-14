@@ -11,7 +11,7 @@ This tutorial extends the connection of IoT devices connecting to FIWARE to use 
 [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual) IoT
 Agent created in the [previous tutorial](https://github.com/FIWARE/tutorials.IoT-Agent) is reconfigured to communicate
 with a set of dummy IoT devices which transfer secure messages over the
-[IOTA Tangle](https://iota-beginners-guide.com/dlt/tangle/). An additional gateway component is added to the
+[IOTA Tangle](https://www.iota.org/get-started/what-is-iota). An additional gateway component is added to the
 architecture of the previous [MQTT tutorial](https://github.com/FIWARE/tutorials.IoT-over-MQTT) to allow for secure
 indelible transactions across a distributed ledger network.
 
