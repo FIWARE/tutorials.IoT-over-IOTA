@@ -10,7 +10,7 @@
 このチュートリアルでは、FIWARE に接続する IoT デバイスの接続を拡張して、代替トランスポートを使用します。 
 [以前のチュートリアル](https://github.com/FIWARE/tutorials.IoT-Agent)で作成された
 [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual) IoT
-Agent は、[IOTA Tangle](https://iota-beginners-guide.com/dlt/tangle/) を介して安全なメッセージを転送するダミーの IoT
+Agent は、[IOTA Tangle](https://www.iota.org/get-started/what-is-iota) を介して安全なメッセージを転送するダミーの IoT
 デバイスのセットと通信するように再構成されています。 以前の [MQTT チュートリアル](https://github.com/FIWARE/tutorials.IoT-over-MQTT)
 のアーキテクチャに追加のゲートウェイ・コンポーネントが追加され、分散型台帳ネットワーク全体で安全な消えない
 トランザクションが可能になります。
