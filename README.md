@@ -44,10 +44,10 @@ commands where necessary, and is also available as
 -   [Using the IOTA Tangle as a Transport](#using-the-iota-tangle-as-a-transport)
     -   [Sending Commands](#sending-commands)
     -   [Sending Device Measures](#sending-device-measures)
-    *   [MQTT-IOTA Gateway - Sample Code](#mqtt-iota-gateway---sample-code)
+    -   [MQTT-IOTA Gateway - Sample Code](#mqtt-iota-gateway---sample-code)
         -   [MQTT-IOTA Gateway Southbound - Sample Code](#mqtt-iota-gateway-southbound---sample-code)
         -   [MQTT-IOTA Gateway Northbound - Sample Code](#mqtt-iota-gateway-northbound---sample-code)
-    *   [IOTA Tangle Device - Sample Code](#iota-tangle-device---sample-code)
+    -   [IOTA Tangle Device - Sample Code](#iota-tangle-device---sample-code)
         -   [IOTA Tangle Device Command Acknowledgement](#iota-tangle-device-command-acknowledgement)
         -   [IOTA Tangle Device measure - Sample Code](#iota-tangle-device-measure---sample-code)
 -   [Next Steps](#next-steps)
@@ -63,18 +63,18 @@ commands where necessary, and is also available as
 
 The [IOTA Tangle](https://www.iota.org/get-started/what-is-iota) is a directed acyclic graph which can be used as a
 distributed ledger. It is not a traditional blockchain, but works with the concept of a Tangle which contains the
-current transaction history and links from parents to child transations which provide a single source of truth in a
+current transaction history and links from parents to child transactions which provide a single source of truth in a
 distributed network. Whenever information is persisted to the tangle it is replicated across all nodes so that any
 client, anywhere around the world can send valid transactions to a Node.
 
 IOTA positions itself as being an ideal distributed ledger for IoT due to its feeless nature and scalable distributed
 structure. Obviously when architecting any smart system, the developer needs to compromise between various factors such
 as price, speed, reliability, security and so on. The previous MQTT tutorial was fast, but contained no security elements
-and was vunerable to malicious attack. An IOTA-based IoT system will automatically include secure logging of all events
-and therefore could be used to for charging customers on an event-by-event basis.
+and was vulnerable to malicious attack. An IOTA-based IoT system will automatically include secure logging of all events
+and therefore, could be used to for charging customers on an event-by-event basis.
 
 A hybrid system could also be envisaged where some frequent but low risk transactions could be made using a standard
-MQTT transport (e.g. continouous tracking of the location an ARV), whereas infrequent but chargable events could be made
+MQTT transport (e.g. continuous tracking of the location an ARV), whereas infrequent but chargeable events could be made
 using a secure system like IOTA (e.g. credit card payment for an entire trip)
 
 The basic IOTA architecture includes the following basic components:
@@ -87,7 +87,7 @@ The basic IOTA architecture includes the following basic components:
 
 For the purpose of this tutorial, all data from the dummy devices is being stored within the IOTA Tangle. Each device
 reading will be placed in a transaction object and attached to the IOTA Tangle, once attached it cannot be changed and
-is immutable. It obviously takes time for all nodes to agree that a transaction hs occurred, and therefore all
+is immutable. It obviously takes time for all nodes to agree that a transaction has occurred, and therefore all
 communication should be considered as asynchronous.
 
 The IoT Agent for Ultralight currently offers three standard transport mechanisms - HTTP, MQTT and AMPQ. Whereas it
@@ -102,7 +102,7 @@ as a message bus, so we can provision our IoT devices as MQTT devices and interc
 transform the data into IOTA Tangle transactions to talk to IOTA Tangle enabled devices. The payload of each message
 continues to use the existing
 [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
-syntax and therefore we can continue to used thesame FIWARE generic enabler to connect the devices. It is merely the
+syntax and therefore we can continue to use the same FIWARE generic enabler to connect the devices. It is merely the
 underlying **transport** which has been customized in this scenario.
 
 #### Mosquitto MQTT Broker
@@ -188,7 +188,7 @@ The `mosquitto` container is listening on two ports:
 -   Port `9001` is the standard port for HTTP/Websocket communications
 
 The attached volume is a
-[configuration file](https://github.com/FIWARE/tutorials.IoT-over-MQTT/blob/master/mosquitto/mosquitto.conf) used to
+[configuration file](https://github.com/FIWARE/tutorials.IoT-over-IOTA/blob/NGSI-v2/mosquitto/mosquitto.conf) used to
 increase the debug level of the MQTT Message Broker.
 
 ## Dummy IoT Devices Configuration
@@ -335,7 +335,7 @@ technology which allows to different components isolated into their respective e
 -   To install Docker on Linux follow the instructions [here](https://docs.docker.com/install/)
 
 **Docker Compose** is a tool for defining and running multi-container Docker applications. A
-[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.IoT-over-MQTT/master/docker-compose.yml) is used
+[YAML file](https://raw.githubusercontent.com/Fiware/tutorials.IoT-over-IOTA/NGSI-v2/docker-compose.yml) is used
 configure the required services for the application. This means all container services can be brought up in a single
 command. Docker Compose is installed by default as part of Docker for Windows and Docker for Mac, however Linux users
 will need to follow the instructions found [here](https://docs.docker.com/compose/install/)
@@ -361,15 +361,15 @@ Before you start you should ensure that you have obtained or built the necessary
 repository and create the necessary images by running the commands as shown:
 
 ```console
-git clone https://github.com/FIWARE/tutorials.IoT-over-MQTT.git
-cd tutorials.IoT-over-MQTT
+git clone https://github.com/FIWARE/tutorials.IoT-over-IOTA.git
+cd tutorials.IoT-over-IOTA
 git checkout NGSI-v2
 
 ./services create
 ```
 
 Thereafter, all services can be initialized from the command-line by running the
-[services](https://github.com/FIWARE/tutorials.IoT-over-MQTT/blob/NGSI-v2/services) Bash script provided within the
+[services](https://github.com/FIWARE/tutorials.IoT-over-IOTA/blob/NGSI-v2/services) Bash script provided within the
 repository:
 
 ```console
@@ -391,7 +391,7 @@ It is not necessary to re-run these commands.
 A series of service groups are created to associate classes of devices to an API Key, in the example below services have
 been created for `type=Bell` and `type=Motion`. It should be noted that the `resource` attribute has been left blank and
 the `transport` set to `MQTT` - this is the same as the in the previous MQTT tutorial, since the IoT Agent is merely
-sending messsages to the MQTT broker and has no idea that a custom gateway component is also involved.
+sending messages to the MQTT broker and has no idea that a custom gateway component is also involved.
 
 ```console
 curl -X POST  \
@@ -509,8 +509,8 @@ The gateway needs to subscribe to the IOTA Tangle to receive measures and comman
 ### Display the Dummy Device logs (:two:nd Terminal)
 
 A sensor sending northbound measurements will persists transactions to the IOTA Tangle to which will be passed on to any
-subscriber than wants them. The sensor does not need to make a connection to the subscriber directly. Similarly any
-connected actuators will need to subscribe to an IOTA Tangle message topic to receive aby commands that are relevant to
+subscriber than wants them. The sensor does not need to make a connection to the subscriber directly. Similarly, any
+connected actuators will need to subscribe to an IOTA Tangle message topic to receive any commands that are relevant to
 them.
 
 Open a **new terminal**, and run a `fiware-tutorial` Docker container to send a message as follows:
@@ -554,7 +554,7 @@ curl -L -X PATCH 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001/attrs' 
 }'
 ```
 
-The NGSI request is transfomed into an MQTT message (with an Ultralight payload) which is received by the MQTT-IOTA
+The NGSI request is transformed into an MQTT message (with an Ultralight payload) which is received by the MQTT-IOTA
 Gateway - this message is then persisted to the IOTA Tangle as shown:
 
 #### :one:st terminal - Gateway Result:
@@ -710,7 +710,7 @@ curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Motion:001?options
 
 ## MQTT-IOTA Gateway - Sample Code
 
-The [MQTT-IOTA Gateway](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/master/iota-gateway/app) is a simple
+The [MQTT-IOTA Gateway](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/NGSI-v2/iota-gateway/app) is a simple
 application written in Node.js. Its only function is passing data between the two transports. MQTT Client libraries
 already exist so the application can be set up to listen to the normal MQTT topic for IoT Agent actuations.
 
@@ -723,8 +723,8 @@ MQTT_CLIENT.on("connect", () => {
 MQTT_CLIENT.on("message", Southbound.command);
 ```
 
-Similarly there are equivalent [client libraries](https://wiki.iota.org/iota.rs/libraries/nodejs/getting_started)
-available in multiple langauges for persisting and listening to changes on the IOTA Tangle. The MQTT-IOTA Gateway needs
+Similarly, there are equivalent [client libraries](https://wiki.iota.org/iota.rs/libraries/nodejs/getting_started)
+available in multiple languages for persisting and listening to changes on the IOTA Tangle. The MQTT-IOTA Gateway needs
 to listen on two topics - one for device measures and a second one for acknowledgements of commands:
 
 ```javascript
@@ -815,7 +815,7 @@ function forwardAsMQTT(apiKey, deviceId, state, topic) {
 }
 ```
 
-The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/master/iota-gateway/app) of the MQTT-IOTA Gateway
+The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/NGSI-v2/iota-gateway/app) of the MQTT-IOTA Gateway
 includes additional error handling and asynchronous data handling to defer the execution of a function until the next
 Event Loop iteration.
 
@@ -931,4 +931,4 @@ the other [tutorials in this series](https://fiware-tutorials.rtfd.io)
 
 ## License
 
-[MIT](LICENSE) © 2021 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2021-2022 FIWARE Foundation e.V.
