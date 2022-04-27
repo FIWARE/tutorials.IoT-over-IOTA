@@ -4,6 +4,7 @@ const debug = require('debug')('gateway:northbound');
 
 /*global MQTT_CLIENT*/
 const DEVICE_PAYLOAD = process.env.DUMMY_DEVICES_PAYLOAD || 'ultralight';
+const MQTT_TOPIC_PROTOCOL = process.env.MQTT_TOPIC_PROTOCOL || 'ul';
 
 // Extracts a Command from a JSON Object - used with JSON Payloads only.
 function getJSONCommand(string) {
@@ -71,7 +72,10 @@ function measureReceived(messageData) {
 
 // measures and command acknowledgements are sent northbound over MQTT and posted as topics
 function forwardAsMQTT(apiKey, deviceId, state, topic) {
-    const mqttTopic = '/' + apiKey + '/' + deviceId + '/' + topic;
+    let mqttTopic = '/' + apiKey + '/' + deviceId + '/' + topic;
+    if (MQTT_TOPIC_PROTOCOL !== '') {
+        mqttTopic = '/' + MQTT_TOPIC_PROTOCOL + mqttTopic;
+    }
     debug('Sent to MQTT topic ' + mqttTopic);
     MQTT_CLIENT.publish(mqttTopic, state);
 }

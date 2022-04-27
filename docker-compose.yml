@@ -164,6 +164,7 @@ services:
       - "MQTT_BROKER_URL=mqtt://mosquitto"
       - "IOTA_NODE=https://chrysalis-nodes.iota.cafe"
       - "IOTA_MESSAGE_INDEX=fiware"
+      - "MQTT_TOPIC_PROTOCOL=ul"
     deploy:
       resources:
         limits:
