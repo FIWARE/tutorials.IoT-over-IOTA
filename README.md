@@ -70,9 +70,9 @@ client, anywhere around the world can send valid transactions to a Node.
 
 IOTA positions itself as being an ideal distributed ledger for IoT due to its feeless nature and scalable distributed
 structure. Obviously when architecting any smart system, the developer needs to compromise between various factors such
-as price, speed, reliability, security and so on. The previous MQTT tutorial was fast, but contained no security elements
-and was vulnerable to malicious attack. An IOTA-based IoT system will automatically include secure logging of all events
-and therefore, could be used to for charging customers on an event-by-event basis.
+as price, speed, reliability, security and so on. The previous MQTT tutorial was fast, but contained no security
+elements and was vulnerable to malicious attack. An IOTA-based IoT system will automatically include secure logging of
+all events and therefore, could be used to for charging customers on an event-by-event basis.
 
 A hybrid system could also be envisaged where some frequent but low risk transactions could be made using a standard
 MQTT transport (e.g. continuous tracking of the location an ARV), whereas infrequent but chargeable events could be made
@@ -678,9 +678,9 @@ Once the transactions is settled, it is passed onto the subscribing Gateway comp
 2021-12-07T16:35:25.680Z gateway:northbound Sent to MQTT topic /1068318794/motion001/attrs
 ```
 
-There may be a noticeable lag between reading the measure and it being received at the context broker. The payload of the
-measure therefore contains a timestamp `t|2021-12-07T16:34:44.891Z` which is mapped to `TimeInstant` in the IoT Agent to
-ensure that the correct metadata is associated with the measure in the context broker.
+There may be a noticeable lag between reading the measure and it being received at the context broker. The payload of
+the measure therefore contains a timestamp `t|2021-12-07T16:34:44.891Z` which is mapped to `TimeInstant` in the IoT
+Agent to ensure that the correct metadata is associated with the measure in the context broker.
 
 The state of the sensor can be read by querying the entity within the Orion Context Broker.
 
@@ -816,9 +816,9 @@ function forwardAsMQTT(apiKey, deviceId, state, topic) {
 }
 ```
 
-The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/NGSI-v2/iota-gateway/app) of the MQTT-IOTA Gateway
-includes additional error handling and asynchronous data handling to defer the execution of a function until the next
-Event Loop iteration.
+The [full code](https://github.com/FIWARE/tutorials.IoT-over-IOTA/tree/NGSI-v2/iota-gateway/app) of the MQTT-IOTA
+Gateway includes additional error handling and asynchronous data handling to defer the execution of a function until the
+next Event Loop iteration.
 
 ## IOTA Tangle Device - Sample Code
 
