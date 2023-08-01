@@ -149,7 +149,9 @@ case "${command}" in
 		export $(cat .env | grep "#" -v)
 		echo "Pulling Docker images"
 		docker pull quay.io/curl/curl
-		${dockerCmd} pull 
+		${dockerCmd} pull --ignore-buildable
+		echo "Rebuilding iota-gateway Docker image"
+		${dockerCmd} build iota-gateway --no-cache
 		;;
 	*)
 		echo "Command not Found."
