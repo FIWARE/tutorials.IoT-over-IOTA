@@ -148,8 +148,8 @@ case "${command}" in
 	"create")
 		export $(cat .env | grep "#" -v)
 		echo "Pulling Docker images"
-		docker pull quay.io/curl/curl
-		${dockerCmd} pull --ignore-buildable
+		docker pull -q quay.io/curl/curl
+		${dockerCmd} pull --ignore-pull-failures--ignore-buildable
 		echo "Rebuilding iota-gateway Docker image"
 		${dockerCmd} build iota-gateway --no-cache
 		;;
