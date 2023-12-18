@@ -37,8 +37,8 @@ Agent は、[IOTA Tangle](https://www.iota.org/get-started/what-is-iota) を介�
     -   [Cygwin for Windows](#cygwin-for-windows)
 -   [起動](#start-up)
     -   [デバイスのプロビジョニング](#provisioning-devices)
-        -   [IOTA-Gateway のログを表示 (:one:st ターミナル)](#display-the-iota-gateway-logs-onest-terminal)
-        -   [ダミー・デバイスのログを表示 (:two:nd ターミナル)](#display-the-dummy-device-logs-twond-terminal)
+        -   [IOTA-Gateway のログを表示 (1️⃣st ターミナル)](#display-the-iota-gateway-logs-onest-terminal)
+        -   [ダミー・デバイスのログを表示 (2️⃣nd ターミナル)](#display-the-dummy-device-logs-twond-terminal)
 -   [IOTA Tangle をトランスポートとして使用](#using-the-iota-tangle-as-a-transport)
     -   [コマンドの送信](#sending-commands)
     -   [デバイスの測定値の送信](#sending-device-measures)
@@ -500,7 +500,7 @@ curl -X POST \
 
 <a name="display-the-iota-gateway-logs-onest-terminal"></a>
 
-### IOTA-Gateway のログを表示 (:one:st ターミナル)
+### IOTA-Gateway のログを表示 (1️⃣st ターミナル)
 
 **新しいターミナル**を開き、次のように `iota-gateway` Docker コンテナを実行します:
 
@@ -510,7 +510,7 @@ docker logs -f iota-gateway
 
 これで、ターミナルは受信したメッセージを表示する準備が整います。
 
-#### :one:st ターミナル - ゲートウェイの結果:
+#### 1️⃣st ターミナル - ゲートウェイの結果:
 
 MQTT-IOTA ゲートウェイが正しく機能している場合は、次のメッセージが表示されます:
 
@@ -525,7 +525,7 @@ MQTT-IOTA ゲートウェイが正しく機能している場合は、次のメ�
 
 <a name="display-the-dummy-device-logs-twond-terminal"></a>
 
-### ダミー・デバイスのログを表示 (:two:nd ターミナル)
+### ダミー・デバイスのログを表示 (2️⃣nd ターミナル)
 
 ノースバウンドの測定値を送信するセンサは、トランザクションを IOTA Tangle に永続化し、必要以上にサブスクライバに
 渡されます。センサは、サブスクライバに直接接続する必要はありません。同様に、接続されているアクチュエータは、それらに
@@ -539,7 +539,7 @@ docker logs -f fiware-tutorial
 
 これで、ターミナルは受信したメッセージを表示する準備が整います。
 
-#### :two:nd ターミナル - デバイスの結果:
+#### 2️⃣nd ターミナル - デバイスの結果:
 
 デバイスが正しく機能している場合、メッセージは他のターミナルで受信される必要があります。
 
@@ -562,7 +562,7 @@ docker logs -f fiware-tutorial
 すべてのデバイスが事前にプロビジョニングされているため、標準の NGSI-v2 PATCH リクエストを使用してベルを
 鳴らすことができます。
 
-#### :one: リクエスト:
+#### 1️⃣ リクエスト:
 
 ```console
 curl -L -X PATCH 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001/attrs' \
@@ -580,7 +580,7 @@ curl -L -X PATCH 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001/attrs' 
 NGSI リクエストは MQTT メッセージ (Ultralight ペイロードを含む) に変換され、MQTT-IOTA ゲートウェイによって受信されます。
 このメッセージは、次のように IOTA Tangle に保持されます:
 
-#### :one:st ターミナル - ゲートウェイの結果:
+#### 1️⃣st ターミナル - ゲートウェイの結果:
 
 ```text
 2021-12-07T15:50:54.848Z gateway:southbound Command received from MQTT bell001@ring|
@@ -591,7 +591,7 @@ NGSI リクエストは MQTT メッセージ (Ultralight ペイロードを含�
 ダミー・デバイスも IOTA Tangle メッセージをサブスクライブしており、メッセージが受信され、デバイスがアクティブ化されます
 (この場合、ベルが鳴ります)。この時点で、確認応答 (acknowledgement) が `fiware/cmdexe` トピックに置かれます:
 
-#### :two:nd ターミナル - デバイスの結果:
+#### 2️⃣nd ターミナル - デバイスの結果:
 
 ```text
 2021-12-07T15:51:12.583Z tutorial:iot-device IOTA Tangle message received:  40431e6e39ade9babe02ef342ee9267f69982fe42db8f5d3f32d57bb686120d5
@@ -607,7 +607,7 @@ NGSI リクエストは MQTT メッセージ (Ultralight ペイロードを含�
 ゲートウェイは、IOTA Tangle の `fiware/cmdexe` トピックから確認応答 (acknowledgement) を受信し、リクエストの結果を
 IoT Agent に返します。
 
-#### :one:st ターミナル - ゲートウェイの結果:
+#### 1️⃣st ターミナル - ゲートウェイの結果:
 
 ```text
 2021-12-07T15:51:18.022Z gateway:northbound Command response received from Tangle: i=bell001&k=1068318794&d=bell001@ring| ring OK
@@ -617,7 +617,7 @@ IoT Agent に返します。
 
 ベルを鳴らすコマンドの結果は、Orion Context Broker 内のエンティティにクエリを実行することで読み取ることができます。
 
-#### :two: リクエスト:
+#### 2️⃣ リクエスト:
 
 ```console
 curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001?options=keyValues' \
@@ -685,7 +685,7 @@ curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001?options=k
 
 デバイスは、IOTA Tangle Mainnet の `fiware/attrs` トピックに測定値を保持します。
 
-#### :two:nd ターミナル - デバイスの結果:
+#### 2️⃣nd ターミナル - デバイスの結果:
 
 ```text
 2021-12-07T16:34:25.767Z tutorial:devices fireMotionSensor
@@ -696,7 +696,7 @@ curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001?options=k
 
 トランザクションが決済されると、サブスクライブしているゲートウェイ・コンポーネントに渡されます。
 
-#### :one:st ターミナル - ゲートウェイの結果:
+#### 1️⃣st ターミナル - ゲートウェイの結果:
 
 ```text
 2021-12-07T16:35:25.679Z gateway:northbound Measure received from Tangle: i=motion001&k=1068318794&d=c|0|t|2021-12-07T16:34:44.891Z
@@ -709,7 +709,7 @@ curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001?options=k
 
 センサの状態は、Orion Context Broker 内のエンティティにクエリを実行することで読み取ることができます。
 
-#### :three: リクエスト:
+#### 3️⃣ リクエスト:
 
 ```console
 curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Motion:001?options=keyValues' \

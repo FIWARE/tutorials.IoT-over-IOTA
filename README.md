@@ -40,8 +40,8 @@ commands where necessary, and is also available as
     -   [Cygwin for Windows](#cygwin-for-windows)
 -   [Start Up](#start-up)
     -   [Provisioning Devices](#provisioning-devices)
-        -   [Display the IOTA-Gateway logs (:one:st Terminal)](#display-the-iota-gateway-logs-onest-terminal)
-        -   [Display the Dummy Device logs (:two:nd Terminal)](#display-the-dummy-device-logs-twond-terminal)
+        -   [Display the IOTA-Gateway logs (1️⃣st Terminal)](#display-the-iota-gateway-logs-onest-terminal)
+        -   [Display the Dummy Device logs (2️⃣nd Terminal)](#display-the-dummy-device-logs-twond-terminal)
 -   [Using the IOTA Tangle as a Transport](#using-the-iota-tangle-as-a-transport)
     -   [Sending Commands](#sending-commands)
     -   [Sending Device Measures](#sending-device-measures)
@@ -485,7 +485,7 @@ curl -X POST \
 The device monitor can be found at: `http://localhost:3000/device/monitor` - open the web page to view the state of the
 devices and view the persisted IOTA Tangle traffic.
 
-### Display the IOTA-Gateway logs (:one:st Terminal)
+### Display the IOTA-Gateway logs (1️⃣st Terminal)
 
 Open a **new terminal**, and follow the `iota-gateway` Docker container as follows:
 
@@ -495,7 +495,7 @@ docker logs -f iota-gateway
 
 The terminal will then be ready to display received messages
 
-#### :one:st terminal - Gateway Result:
+#### 1️⃣st terminal - Gateway Result:
 
 If the MQTT-IOTA Gateway is functioning correctly, the following messages should be displayed
 
@@ -507,7 +507,7 @@ If the MQTT-IOTA Gateway is functioning correctly, the following messages should
 
 The gateway needs to subscribe to the IOTA Tangle to receive measures and command acknowledgements.
 
-### Display the Dummy Device logs (:two:nd Terminal)
+### Display the Dummy Device logs (2️⃣nd Terminal)
 
 A sensor sending northbound measurements will persists transactions to the IOTA Tangle to which will be passed on to any
 subscriber than wants them. The sensor does not need to make a connection to the subscriber directly. Similarly, any
@@ -522,7 +522,7 @@ docker logs -f fiware-tutorial
 
 The terminal will then be ready to display received messages
 
-#### :two:nd terminal - Device Result:
+#### 2️⃣nd terminal - Device Result:
 
 If the Devices are functioning correctly, the message should be received in the other terminal
 
@@ -540,7 +540,7 @@ If the Devices are functioning correctly, the message should be received in the 
 
 Since all the devices have been pre-provisioned, a bell can be rung using a standard NGSI-v2 PATCH request
 
-#### :one: Request:
+#### 1️⃣ Request:
 
 ```console
 curl -L -X PATCH 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001/attrs' \
@@ -558,7 +558,7 @@ curl -L -X PATCH 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001/attrs' 
 The NGSI request is transformed into an MQTT message (with an Ultralight payload) which is received by the MQTT-IOTA
 Gateway - this message is then persisted to the IOTA Tangle as shown:
 
-#### :one:st terminal - Gateway Result:
+#### 1️⃣st terminal - Gateway Result:
 
 ```text
 2021-12-07T15:50:54.848Z gateway:southbound Command received from MQTT bell001@ring|
@@ -569,7 +569,7 @@ Gateway - this message is then persisted to the IOTA Tangle as shown:
 The dummy device is also subscribing to IOTA Tangle messages, a message is received and the device is activated (in this
 case the bell will ring). At this point an acknowledgement is placed onto the `fiware/cmdexe` topic:
 
-#### :two:nd terminal - Device Result:
+#### 2️⃣nd terminal - Device Result:
 
 ```text
 2021-12-07T15:51:12.583Z tutorial:iot-device IOTA Tangle message received:  40431e6e39ade9babe02ef342ee9267f69982fe42db8f5d3f32d57bb686120d5
@@ -585,7 +585,7 @@ If you are viewing the device monitor page, you can also see the state of the be
 The Gateway receives the acknowledgement from the IOTA Tangle `fiware/cmdexe` topic and returns the result of the
 request to the IoT Agent.
 
-#### :one:st terminal - Gateway Result:
+#### 1️⃣st terminal - Gateway Result:
 
 ```text
 2021-12-07T15:51:18.022Z gateway:northbound Command response received from Tangle: i=bell001&k=1068318794&d=bell001@ring| ring OK
@@ -595,7 +595,7 @@ request to the IoT Agent.
 
 The result of the command to ring the bell can be read by querying the entity within the Orion Context Broker.
 
-#### :two: Request:
+#### 2️⃣ Request:
 
 ```console
 curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001?options=keyValues' \
@@ -660,7 +660,7 @@ A measure from a device can be simulated by selecting **Detect Motion** from the
 
 The device persists the measure to the `fiware/attrs` topic on the IOTA Tangle Mainnet.
 
-#### :two:nd terminal - Device Result:
+#### 2️⃣nd terminal - Device Result:
 
 ```text
 2021-12-07T16:34:25.767Z tutorial:devices fireMotionSensor
@@ -671,7 +671,7 @@ The device persists the measure to the `fiware/attrs` topic on the IOTA Tangle M
 
 Once the transactions is settled, it is passed onto the subscribing Gateway component
 
-#### :one:st terminal - Gateway Result:
+#### 1️⃣st terminal - Gateway Result:
 
 ```text
 2021-12-07T16:35:25.679Z gateway:northbound Measure received from Tangle: i=motion001&k=1068318794&d=c|0|t|2021-12-07T16:34:44.891Z
@@ -684,7 +684,7 @@ Agent to ensure that the correct metadata is associated with the measure in the 
 
 The state of the sensor can be read by querying the entity within the Orion Context Broker.
 
-#### :three: Request:
+#### 3️⃣ Request:
 
 ```console
 curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Motion:001?options=keyValues' \
