@@ -625,7 +625,8 @@ curl -L -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001?options=k
 The `TimeInstant` shows last the time any command associated with the entity has been invoked. The result of `ring`
 command can be seen in the value of the `ring_info` attribute.
 
-> **Note:** IOTA Transactions are not instantaneous, if the bell is queried before the transaction is complete, the
+> [!NOTE]
+> IOTA Transactions are not instantaneous, if the bell is queried before the transaction is complete, the
 > response will leave the `ring_status` as `PENDING`
 >
 > ```
