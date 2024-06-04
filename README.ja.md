@@ -34,7 +34,7 @@ Agent は、[IOTA Tangle](https://www.iota.org/get-started/what-is-iota) を介�
     -   [MQTT-IOTA ゲートウェイ の構成](#mqtt-iota-gateway-configuration)
 -   [前提条件](#prerequisites)
     -   [Docker と Docker Compose](#docker-and-docker-compose)
-    -   [Cygwin for Windows](#cygwin-for-windows)
+    -   [WSL](#wsl)
 -   [起動](#start-up)
     -   [デバイスのプロビジョニング](#provisioning-devices)
         -   [IOTA-Gateway のログを表示 (1️⃣st ターミナル)](#display-the-iota-gateway-logs-onest-terminal)
@@ -358,11 +358,9 @@ docker version
 Docker バージョン 20.10 以降と Docker Compose 1.29 以上を使用していることを確認し、必要に応じてアップグレード
 してください。
 
-<a name="cygwin-for-windows"></a>
+## WSL
 
-## Cygwin for Windows
-
-シンプルな bash スクリプトを使用してサービスを開始します。Windows ユーザは [cygwin](http://www.cygwin.com/)
+シンプルな bash スクリプトを使用してサービスを開始します。Windows ユーザは [を使用して Windows に Linux をインストールする方法](https://learn.microsoft.com/ja-jp/windows/wsl/install)
 をダウンロードして、Windows 上の Linux ディストリビューションと同様のコマンドライン機能を提供する必要があります。
 
 <a name="start-up"></a>
