@@ -382,6 +382,7 @@ repository:
 ```
 
 > [!NOTE]
+>
 > If you want to clean up and start over again you can do so with the following command:
 >
 > ```console
@@ -630,8 +631,9 @@ The `TimeInstant` shows last the time any command associated with the entity has
 command can be seen in the value of the `ring_info` attribute.
 
 > [!NOTE]
-> IOTA Transactions are not instantaneous, if the bell is queried before the transaction is complete, the
-> response will leave the `ring_status` as `PENDING`
+>
+> IOTA Transactions are not instantaneous, if the bell is queried before the transaction is complete, the response will
+> leave the `ring_status` as `PENDING`
 >
 > ```
 > {
