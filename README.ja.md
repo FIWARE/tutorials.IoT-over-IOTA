@@ -4,12 +4,12 @@
 [![FIWARE IoT Agents](https://fiware.github.io/catalogue/badges/chapters/iot-agents.svg)](https://github.com/FIWARE/catalogue/blob/master/iot-agents/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.IoT-over-MQTT.svg)](https://opensource.org/licenses/MIT)
 [![Support badge](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](https://stackoverflow.com/questions/tagged/fiware)
-[![UltraLight 2.0](https://img.shields.io/badge/Payload-Ultralight-27ae60.svg)](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
+[![JSON](https://img.shields.io/badge/Payload-JSON-27ae60.svg)](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
 <br/> [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
 このチュートリアルでは、FIWARE に接続する IoT デバイスの接続を拡張して、代替トランスポートを使用します。 
 [以前のチュートリアル](https://github.com/FIWARE/tutorials.IoT-Agent)で作成された
-[UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual) IoT
+[JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual) IoT
 Agent は、[IOTA Tangle](https://www.iota.org/get-started/what-is-iota) を介して安全なメッセージを転送するダミーの IoT
 デバイスのセットと通信するように再構成されています。 以前の [MQTT チュートリアル](https://github.com/FIWARE/tutorials.IoT-over-MQTT)
 のアーキテクチャに追加のゲートウェイ・コンポーネントが追加され、分散型台帳ネットワーク全体で安全な消えない
@@ -30,7 +30,7 @@ Agent は、[IOTA Tangle](https://www.iota.org/get-started/what-is-iota) を介�
 -   [アーキテクチャ](#architecture)
     -   [Mosquitto の構成](#mosquitto-configuration)
     -   [ダミー IoT デバイスの構成](#dummy-iot-devices-configuration)
-    -   [IoT Agent for UltraLight 2.0 の構成](#iot-agent-for-ultralight-20-configuration)
+    -   [IoT Agent for JSON の構成](#iot-agent-for-ultralight-20-configuration)
     -   [MQTT-IOTA ゲートウェイ の構成](#mqtt-iota-gateway-configuration)
 -   [前提条件](#prerequisites)
     -   [Docker と Docker Compose](#docker-and-docker-compose)
@@ -88,7 +88,7 @@ IOTA は、その無料の性質 (feeless nature) とスケーラブルな分散
 不変になります。 明らかに、すべてのノードがトランザクションが発生したことに同意するには時間がかかるため、
 すべての通信は非同期と見なす必要があります。
 
-IoT Agent for Ultralight は現在、HTTP, MQTT, AMPQ の3つの標準トランスポート・メカニズムを提供しています。 IOTA
+IoT Agent for JSON は現在、HTTP, MQTT, AMPQ の3つの標準トランスポート・メカニズムを提供しています。 IOTA
 の新しいバインディングを直接作成することは可能ですが、この場合、既存の非同期 MQTT バインディングを再利用し、別の
 マイクロ・サービスが IOTA メッセージを処理するゲートウェイ・ソリューションを使用して拡張する方が理にかなっています。
 [OPC-UA](https://iotagent-opcua.readthedocs.io/) と [LoRaWAN](https://fiware-lorawan.readthedocs.io/) には、
@@ -98,7 +98,7 @@ IoT Agent for Ultralight は現在、HTTP, MQTT, AMPQ の3つの標準トラン�
 形式に変換します。このチュートリアルで説明されているゲートウェイ・ソリューションにより、MQTT はメッセージバスとして
 効果的に使用されているため、IoT デバイスを MQTT デバイスとしてプロビジョニングし、関連する MQTT トピックを
 インターセプトして、データを IOTA Tangle トランザクションに変換し、IOTA Tangle 対応デバイスと通信できます。
-各メッセージのペイロードは、既存の [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
+各メッセージのペイロードは、既存の [JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
 構文を引き続き使用するため、同じ FIWARE generic enabler を引き続き使用してデバイスを接続できます。このシナリオで
 カスタマイズされたのは、基礎となる**トランスポート**にすぎません。
 
@@ -111,7 +111,7 @@ IoT Agent for Ultralight は現在、HTTP, MQTT, AMPQ の3つの標準トラン�
 
 このチュートリアルの目的のために、一連のダミー IoT デバイスが作成され、Context Broker に接続されます。使用される
 アーキテクチャとプロトコルの詳細は、[IoT センサ・チュートリアル](https://github.com/FIWARE/tutorials.IoT-Sensors/tree/NGSI-v2)
-にあります。各デバイスの状態は、UltraLight デバイス・モニタの Web ページは次の場所にあります:
+にあります。各デバイスの状態は、JSON デバイス・モニタの Web ページは次の場所にあります:
 `http://localhost:3000/device/monitor`
 
 ![FIWARE Monitor](https://fiware.github.io//tutorials.IoT-over-IOTA/img/device-monitor.png)
@@ -122,7 +122,7 @@ IoT Agent for Ultralight は現在、HTTP, MQTT, AMPQ の3つの標準トラン�
 
 このアプリケーションは、[以前のチュートリアル](https://github.com/FIWARE/tutorials.IoT-Agent/)で作成されたコンポーネントに
 基づいて構築されています。[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/)と
-[IoT Agent for UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/) の2つの FIWARE コンポーネントを
+[IoT Agent for JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/) の2つの FIWARE コンポーネントを
 利用します。Orion Context Broker の使用は、アプリケーションが _“Powered by FIWARE”_ として認定されるのに十分です。
 Orion Context Broker と IoT Agent はどちらも、保持している情報の永続性を維持するためにオープンソースの [MongoDB](https://www.mongodb.com/)
 テクノロジに依存しています。また、[以前のチュートリアル](https://github.com/FIWARE/tutorials.IoT-Agent/)で作成したダミー
@@ -134,9 +134,9 @@ IoT デバイスを使用します。さらに、オープンソースで EPL/ED
 
 -   FIWARE [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) は、
     [NGSI-v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) を使用してリクエストを受信します
--   FIWARE [IoT Agent for UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/) は以下を行います :
+-   FIWARE [IoT Agent for JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/) は以下を行います :
     -   [NGSI-v2](https://fiware.github.io/specifications/OpenAPI/ngsiv2) を使用してサウス・バウンド・リクエストを受信し、
-        MQTT Broker 用の [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
+        MQTT Broker 用の [JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
         の**トピック**に変換します
     -   登録されたトピックについて **MQTT Broker** をリッスンし、測定値をノース・バウンドに送信します
 -   [Mosquitto](https://mosquitto.org/) **MQTT Broker** は、必要に応じて MQTT トピックを IoT Agent と IoT デ バイスの間で
@@ -145,7 +145,7 @@ IoT デバイスを使用します。さらに、オープンソースで EPL/ED
     -   **Orion Context Broker** が、データ・エンティティ、サブスクリプション、レジストレーションなどのコンテキスト・データ
         情報を保持するために使用します
     -   **IoT Agent** がデバイスの URLs や Keys などのデバイス情報を保持するために使用します
--   IOTA Tangle 上で動作する [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
+-   IOTA Tangle 上で動作する [JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
     プロトコルを使用して、[ダミー IoT デバイス](https://github.com/FIWARE/tutorials.IoT-Sensors/tree/NGSI-v2)
     のセットとして機能する Web サーバー
 -   MQTTトピックメッセージを Tangle に、またはその逆に永続化する MQTT-IOTA ゲートウェイ
@@ -218,7 +218,7 @@ tutorial:
 
 -   ポート `3000` が公開されているので、ダミー IoT デバイスを表示する Web ページが表示されます
 -   ポート `3001` はチュートリアルのアクセスのためだけに公開されているため、cUrl または Postman は同じネットワーク
-    以外からも、UltraLight コマンドを作成できます
+    以外からも、JSON コマンドを作成できます
 
 `tutorial` コンテナは、次のように環境変数によって設定値を指定できます :
 
@@ -227,7 +227,7 @@ tutorial:
 | DEBUG                   | `tutorial:*`                        | ロギングに使用するデバッグ・フラグ                                                                                                                |
 | WEB_APP_PORT            | `3000`                              | ダミー・デバイスのデータを表示する web-app が使用するポート                                                                                       |
 | DUMMY_DEVICES_PORT      | `3001`                              | コマンドを受信するためにダミー IoT デバイスが使用するポート                                                                                       |
-| DUMMY_DEVICES_API_KEY   | `4jggokgpepnvsb2uv4s40d59ov`        | UltraLight インタラクションに使用されるランダムなセキュリティキー - デバイスと IoT Agent 間のインタラクションの完全性を保証するために使用されます |
+| DUMMY_DEVICES_API_KEY   | `4jggokgpepnvsb2uv4s40d59ov`        | JSON インタラクションに使用されるランダムなセキュリティキー - デバイスと IoT Agent 間のインタラクションの完全性を保証するために使用されます |
 | DUMMY_DEVICES_TRANSPORT | `IOTA`                              | ダミー IoT デバイスによって使用されるトランスポート・プロトコル                                                                                   |
 | IOTA_NODE               | `https://chrysalis-nodes.iota.cafe` | ゲートウェイが接続する IOTA ノード                                                                                                                |
 | IOTA_MESSAGE_INDEX      | `fiware`                            | データ・デバイスを永続化するために使用されるメッセージ・インデックス                                                                              |
@@ -236,15 +236,15 @@ YAML ファイルで説明されている他の `tutorial` コンテナ構成値
 
 <a name="iot-agent-for-ultralight-20-configuration"></a>
 
-## IoT Agent for UltraLight 2.0 の構成
+## IoT Agent for JSON の構成
 
-[IoT Agent for UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/) は 、Docker コンテナ内でインスタンス化できます。
-公式の Docker イメージは、[Docker Hub](https://hub.docker.com/r/fiware/iotagent-ul/) からタグ付けされた `fiware/iotagent-ul` です。
+[IoT Agent for JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/) は 、Docker コンテナ内でインスタンス化できます。
+公式の Docker イメージは、[Docker Hub](https://hub.docker.com/r/fiware/iotagent-json/) からタグ付けされた `fiware/iotagent-json` です。
 必要な構成を以下に示します :
 
 ```yaml
 iot-agent:
-    image: quay.io/fiware/iotagent-ul:latest
+    image: quay.io/fiware/iotagent-json:latest
     hostname: iot-agent
     container_name: fiware-iot-agent
     depends_on:
@@ -289,7 +289,7 @@ iot-agent:
 | IOTA_LOG_LEVEL       | `DEBUG`                 | IoT Agent のログ・レベル                                                                                                               |
 | IOTA_TIMESTAMP       | `true`                  | 接続されたデバイスから受信した各測定値にタイムスタンプ情報を提供するかどうかを指定                                                     |
 | IOTA_CB_NGSI_VERSION | `v2`                    | アクティブな属性の更新を送信するときにNGSI v2 を使用するように指定するかどうか                                                         |
-| IOTA_AUTOCAST        | `true`                  | Ultralight の数値が文字列ではなく数値として読み取られるようにする                                                                      |
+| IOTA_AUTOCAST        | `true`                  | JSON の数値が文字列ではなく数値として読み取られるようにする                                                                      |
 | IOTA_MONGO_HOST      | `context-db`            | mongoDB のホスト名 - デバイス情報を保持するために使用                                                                                  |
 | IOTA_MONGO_PORT      | `27017`                 | mongoDB はリッスンしているポート                                                                                                       |
 | IOTA_MONGO_DB        | `iotagentul`            | mongoDB で使用されるデータベースの名前                                                                                                 |
@@ -417,7 +417,7 @@ curl -X POST  \
      "cbroker":     "'"http://orion:1026"'",
      "entity_type": "Motion",
      "resource":    "",
-     "protocol":    "PDI-IoTA-UltraLight",
+     "protocol":    "PDI-IoTA-JSON",
      "transport":   "MQTT",
      "timezone":    "Europe/Berlin",
      "attributes": [
@@ -437,7 +437,7 @@ curl -X POST  \
      "cbroker":     "'"http://orion:1026"'",
      "entity_type": "Bell",
      "resource":    "",
-     "protocol":    "PDI-IoTA-UltraLight",
+     "protocol":    "PDI-IoTA-JSON",
      "transport":   "MQTT",
      "timezone":    "Europe/Berlin",
      "commands": [
@@ -575,7 +575,7 @@ curl -L -X PATCH 'http://localhost:1026/v2/entities/urn:ngsi-ld:Bell:001/attrs' 
 }'
 ```
 
-NGSI リクエストは MQTT メッセージ (Ultralight ペイロードを含む) に変換され、MQTT-IOTA ゲートウェイによって受信されます。
+NGSI リクエストは MQTT メッセージ (JSON ペイロードを含む) に変換され、MQTT-IOTA ゲートウェイによって受信されます。
 このメッセージは、次のように IOTA Tangle に保持されます:
 
 #### 1️⃣st ターミナル - ゲートウェイの結果:
@@ -792,7 +792,7 @@ IOTA_CLIENT.getInfo()
 
 サウスバウンド・トラフィックの場合、API キーとデバイス ID が MQTT トピックから抽出され、IOTA ペイロードに移されます。
 IOTA ペイロードの構文 (`i`, `k` および `d` 属性を使用) は、
-[Ultralight HTTP 構文](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#http-binding)
+[JSON HTTP 構文](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#http-binding)
 に基づいています。 次に、`message` は適切なインデックスを使用して Tangle に永続化されます:
 
 ```javascript
@@ -893,7 +893,7 @@ function readFromTangle(data) {
 ```javascript
  processIOTAMessage(apiKey, deviceId, message) {
         const keyValuePairs = message.split('|') || [''];
-        const command = getUltralightCommand(keyValuePairs[0]);
+        const command = getJSONCommand(keyValuePairs[0]);
         process.nextTick(() => {
             IoTDevices.actuateDevice(deviceId, command)
             .then((response) => {
@@ -926,7 +926,7 @@ const queue = async.queue((data, callback) => {
 
 ### IOTA Tangle デバイスの測定- サンプル・コード
 
-測定値も同様に取り扱われます。ペイロードは Ultralight 構文 (タイムスタンプを含む) で作成され、キューにプッシュ
+測定値も同様に取り扱われます。ペイロードは JSON 構文 (タイムスタンプを含む) で作成され、キューにプッシュ
 されます。キューは測定値を IOTA Tangle に送信し、障害があれば再スケジュールします。
 
 ```javascript
